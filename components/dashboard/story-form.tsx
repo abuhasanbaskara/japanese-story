@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -31,7 +32,7 @@ const categories = [
 
 // Japanese level options
 const japaneseLevels = [
-  { value: 'N0', label: 'N0 (Hiragana Katakana)', description: 'Basic hiragana and katakana characters' },
+  { value: 'N6', label: 'N6 (Hiragana Katakana)', description: 'Basic hiragana and katakana characters' },
   { value: 'N5', label: 'N5 (Basic)', description: 'Basic Japanese - beginner level' },
   { value: 'N4', label: 'N4 (Elementary)', description: 'Elementary Japanese - basic conversation' },
   { value: 'N3', label: 'N3 (Intermediate)', description: 'Intermediate Japanese - daily conversation' },
@@ -46,6 +47,7 @@ const accessOptions = [
 ]
 
 export default function StoryForm() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     title: '',
     story: '',
@@ -273,6 +275,13 @@ export default function StoryForm() {
         if (fileInputRef.current) {
           fileInputRef.current.value = ''
         }
+
+        // Redirect to home page to see the new story (with fresh data)
+        // The page will automatically fetch fresh data in development mode
+        setTimeout(() => {
+          router.push('/')
+          router.refresh() // Force refresh to get latest data
+        }, 1000) // Wait 1 second to show success message
       } else {
         toast.error(`Error: ${data.error}`)
       }

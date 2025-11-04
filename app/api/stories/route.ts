@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import connectDB from '@/lib/config/db'
 import Story from '@/lib/models/story'
 
@@ -43,6 +44,9 @@ export async function POST(request: Request) {
     // Save to database
     const savedStory = await newStory.save()
 
+    // Revalidate the home page to show new story immediately
+    revalidatePath('/')
+
     // Return success response
     return NextResponse.json(
       { 
@@ -76,11 +80,15 @@ export async function GET() {
     // Ensure database connection
     await connectDB()
 
-    // Fetch all stories
+    // Fetch all stories sorted by date (newest first)
     const stories = await Story.find().sort({ date: -1 })
 
     return NextResponse.json(
-      { stories },
+      { 
+        success: true,
+        count: stories.length,
+        stories 
+      },
       { status: 200 }
     )
 
@@ -88,7 +96,11 @@ export async function GET() {
     console.error('Error fetching stories:', error)
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false,
+        error: 'Internal server error',
+        message: error.message || 'Failed to fetch stories'
+      },
       { status: 500 }
     )
   }

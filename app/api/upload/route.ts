@@ -2,21 +2,38 @@ import { NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import sizeOf from 'image-size'
 
-// Cloudflare R2 configuration
-const R2_ACCOUNT_ID = '7f72e5725723b730914022716eb32164'
-const R2_ACCESS_KEY_ID = 'a55991d22607ca9348c4f9cd3abb96bb'
-const R2_SECRET_ACCESS_KEY = '86935babb3c92c4d91cd280f5c4b9d7b38a184815f95d50c8441a5e2dcbfb228'
-const R2_BUCKET_NAME = 'uploads'
+// Cloudflare R2 configuration - using environment variables
+// For development: Set in .env.local
+// For production: Set in hosting platform environment variables
+const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || (process.env.NODE_ENV === 'production' ? 'uploads-prod' : 'uploads-dev')
+
+// Validate required R2 environment variables
+if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+  console.error('Missing required R2 environment variables. Please set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY.')
+}
 
 // Create S3 client for Cloudflare R2
-const s3Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-})
+// Note: forcePathStyle: true is important for R2 compatibility
+// Only create client if credentials are available (lazy initialization)
+const getS3Client = () => {
+  if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+    throw new Error('R2 credentials are not configured. Please set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY in environment variables.')
+  }
+  
+  // After the check above, we know these are defined, but TypeScript needs assertion
+  return new S3Client({
+    region: 'auto',
+    endpoint: `https://${R2_ACCOUNT_ID!}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: R2_ACCESS_KEY_ID!,
+      secretAccessKey: R2_SECRET_ACCESS_KEY!,
+    },
+    forcePathStyle: true // Important for R2 compatibility
+  })
+}
 
 export async function POST(request: Request) {
   try {
@@ -80,11 +97,13 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generate unique filename
+    // Generate unique filename - following the pattern from working project
     const timestamp = Date.now()
-    const filename = `${timestamp}-${file.name}`
+    const sanitizedOriginalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const filename = `${timestamp}_${sanitizedOriginalName}` // Using underscore like working project
 
     // Upload to R2
+    const s3Client = getS3Client()
     const command = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
       Key: filename,
@@ -94,13 +113,19 @@ export async function POST(request: Request) {
 
     await s3Client.send(command)
 
-    // Return the URL - using the R2 public endpoint format
-    // Note: You need to enable public access on your R2 bucket and configure a custom domain
-    // For now, using the bucket endpoint format
-    const imageUrl = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${R2_BUCKET_NAME}/${filename}`
-    
-    // Alternative: If you have a custom domain configured, use:
-    // const imageUrl = `https://your-custom-domain.com/${filename}`
+    // Return the URL - using R2_PUBLIC_BASE_URL environment variable
+    // Development: Set to R2.dev subdomain URL in .env.local
+    // Production: Set to custom domain (e.g., https://cdn.yourdomain.com) in hosting platform
+    const imageUrl = process.env.R2_PUBLIC_BASE_URL 
+      ? `${process.env.R2_PUBLIC_BASE_URL}/${filename}`
+      : (() => {
+          // Fallback: This should not happen in production
+          if (!R2_ACCOUNT_ID) {
+            throw new Error('R2_PUBLIC_BASE_URL is not set and R2_ACCOUNT_ID is missing')
+          }
+          console.warn('R2_PUBLIC_BASE_URL not set, using fallback URL. This may not work for public access.')
+          return `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${R2_BUCKET_NAME}/${filename}`
+        })()
 
     return NextResponse.json(
       { 
