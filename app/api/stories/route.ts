@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import connectDB from '@/lib/config/db'
 import Story from '@/lib/models/story'
+import { tokenizeJapanese } from '@/lib/japanese-tokenizer'
 
 // POST /api/stories - Create a new story
 export async function POST(request: Request) {
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create new story
+    // Create new story (story already contains spaces for word separation)
     const newStory = new Story({
       title,
       story,

@@ -348,6 +348,17 @@ export default function StoryForm() {
           <label htmlFor="story" className="block text-sm font-medium mb-1">
             Story *
           </label>
+          <div className="mb-2 p-3 rounded-md bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
+              ⚠️ Important: Use spaces to separate words for proper word segmentation
+            </p>
+            <p className="text-xs text-blue-800 dark:text-blue-200 mb-2">
+              Example: <code className="bg-blue-100 dark:bg-blue-900/50 px-1.5 py-0.5 rounded font-mono">東京　へ　行きます</code>
+            </p>
+            <p className="text-xs text-blue-700 dark:text-blue-300">
+              Use any space (normal or full-width) between words. Spaces will be removed in display but used for word boundaries.
+            </p>
+          </div>
           <textarea
             id="story"
             name="story"
@@ -355,8 +366,8 @@ export default function StoryForm() {
             onChange={handleChange}
             required
             rows={6}
-            className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-            placeholder="Enter the story content"
+            className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm font-mono"
+            placeholder="東京　へ　行きます"
           />
         </div>
 
