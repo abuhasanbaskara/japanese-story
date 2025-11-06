@@ -1,8 +1,10 @@
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { StoryList } from "@/components/stories/story-list";
+import { TipOfTheDay } from "@/components/stories/tip-of-the-day";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getApiUrl, isDevelopment } from "@/lib/utils";
+import { getTipOfTheDay } from "@/lib/data/tips";
 
 interface Story {
   _id: string;
@@ -44,6 +46,7 @@ async function getStories(): Promise<Story[]> {
 
 export default async function Home() {
   const stories = await getStories();
+  const tipOfTheDay = await getTipOfTheDay();
 
   const japaneseLevels = ["N6", "N5", "N4", "N3", "N2", "N1"];
 
@@ -61,6 +64,11 @@ export default async function Home() {
               Learn Japanese through engaging stories for all levels
             </p>
           </div>
+
+          {/* Tip of the Day */}
+          {tipOfTheDay && (
+            <TipOfTheDay tip={tipOfTheDay} />
+          )}
 
           {/* Tabs for Japanese Levels */}
           <Tabs defaultValue="all" className="w-full">
