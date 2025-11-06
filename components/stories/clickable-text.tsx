@@ -42,15 +42,18 @@ export function ClickableText({
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
         
+        const hasWordElements = tempDiv.querySelector('.word') !== null;
+        
+        if (hasWordElements) {
+          setProcessedHtml(html);
+          return;
+        }
+        
         const processNode = (node: Node) => {
           if (node.nodeType === Node.TEXT_NODE) {
             const textNode = node as Text;
             let text = textNode.textContent || '';
             let parent = textNode.parentElement;
-            
-            if (parent && parent.tagName === 'RT') {
-              return;
-            }
             
             if (text.trim()) {
               const punctuationPattern = /([、。！？，．,.\r\n]+)/g;
@@ -165,6 +168,7 @@ export function ClickableText({
 
     clickableWords.forEach((word) => {
       word.addEventListener('click', handleClick);
+      word.classList.add('hover:bg-blue-100', 'dark:hover:bg-blue-900/30', 'transition-colors');
     });
 
     return () => {

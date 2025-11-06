@@ -44,14 +44,29 @@ export function StoryReader({ story, tokens }: StoryReaderProps) {
   useEffect(() => {
     if (showFurigana && kuroshiroRef.current && story && isInitialized) {
       setIsLoading(true);
-      kuroshiroRef.current
-        .convert(story, {
-          to: "hiragana",
-          mode: "furigana",
-          romajiSystem: "hepburn",
+      
+      const spacePattern = /[\s\u3000]+/g;
+      const tokens = story.split(spacePattern).filter(t => t.trim());
+      
+      Promise.all(
+        tokens.map(async (token) => {
+          try {
+            const converted = await kuroshiroRef.current!.convert(token, {
+              to: "hiragana",
+              mode: "furigana",
+              romajiSystem: "hepburn",
+            });
+            const escapedToken = token.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            return `<span class="word" data-word="${escapedToken}" style="cursor: pointer; border-bottom: 1.5px solid rgba(59, 130, 246, 0.4); padding-bottom: 1px; display: inline; user-select: none; margin-right: 3px;">${converted}</span>`;
+          } catch (error) {
+            console.error(`Failed to convert token: ${token}`, error);
+            const escapedToken = token.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            return `<span class="word" data-word="${escapedToken}" style="cursor: pointer; border-bottom: 1.5px solid rgba(59, 130, 246, 0.4); padding-bottom: 1px; display: inline; user-select: none; margin-right: 3px;">${token}</span>`;
+          }
         })
-        .then((result) => {
-          setFuriganaText(result);
+      )
+        .then((wrappedTokens) => {
+          setFuriganaText(wrappedTokens.join('　'));
           setIsLoading(false);
         })
         .catch((error) => {
