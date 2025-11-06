@@ -66,7 +66,7 @@ export function StoryReader({ story, tokens }: StoryReaderProps) {
         })
       )
         .then((wrappedTokens) => {
-          setFuriganaText(wrappedTokens.join('　'));
+          setFuriganaText(wrappedTokens.join(''));
           setIsLoading(false);
         })
         .catch((error) => {

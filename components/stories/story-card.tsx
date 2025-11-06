@@ -86,7 +86,7 @@ export function StoryCard({
           
           {/* Story Preview */}
           <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-3 leading-relaxed">
-            {story}
+            {story.replace(/[\s\u3000]+/g, '')}
           </p>
           
           {/* Category */}
