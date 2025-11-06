@@ -1,6 +1,5 @@
 import connectDB from '@/lib/config/db'
 import Tip from '@/lib/models/tip'
-import { isDevelopment } from '@/lib/utils'
 
 interface TipData {
   _id: string
@@ -18,16 +17,13 @@ export async function getTipOfTheDay(): Promise<TipData | null> {
 
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-
-    // Try to find tip for today first
-    const todayStart = new Date(today)
     const todayEnd = new Date(today)
     todayEnd.setHours(23, 59, 59, 999)
 
     const todayTip = await Tip.findOne({
       isActive: true,
       displayDate: {
-        $gte: todayStart,
+        $gte: today,
         $lte: todayEnd
       }
     }).sort({ displayDate: -1 })
@@ -44,7 +40,6 @@ export async function getTipOfTheDay(): Promise<TipData | null> {
       }
     }
 
-    // If no tip for today, get the most recent active tip
     const recentTip = await Tip.findOne({
       isActive: true
     }).sort({ displayDate: -1, createdAt: -1 })

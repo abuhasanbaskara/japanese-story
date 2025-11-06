@@ -19,17 +19,16 @@ export function TipOfTheDay({ tip }: TipOfTheDayProps) {
     return null
   }
 
-  const getCategoryLabel = (category: string) => {
-    const categoryMap: Record<string, string> = {
-      grammar: 'Grammar',
-      vocabulary: 'Vocabulary',
-      idiom: 'Idiom',
-      culture: 'Culture',
-      pronunciation: 'Pronunciation',
-      other: 'Other',
-    }
-    return categoryMap[category] || category
+  const categoryLabels: Record<string, string> = {
+    grammar: 'Grammar',
+    vocabulary: 'Vocabulary',
+    idiom: 'Idiom',
+    culture: 'Culture',
+    pronunciation: 'Pronunciation',
+    other: 'Other',
   }
+
+  const getCategoryLabel = (category: string) => categoryLabels[category] || category
 
   return (
     <div className="rounded-lg border border-muted bg-muted/30 p-3 sm:p-4">

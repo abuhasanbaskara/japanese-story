@@ -90,17 +90,16 @@ export function TipList({ onDelete, refreshKey }: TipListProps) {
     })
   }
 
-  const getCategoryLabel = (category: string) => {
-    const categoryMap: Record<string, string> = {
-      grammar: 'Grammar',
-      vocabulary: 'Vocabulary',
-      idiom: 'Idiom',
-      culture: 'Culture',
-      pronunciation: 'Pronunciation',
-      other: 'Other',
-    }
-    return categoryMap[category] || category
+  const categoryLabels: Record<string, string> = {
+    grammar: 'Grammar',
+    vocabulary: 'Vocabulary',
+    idiom: 'Idiom',
+    culture: 'Culture',
+    pronunciation: 'Pronunciation',
+    other: 'Other',
   }
+
+  const getCategoryLabel = (category: string) => categoryLabels[category] || category
 
   if (loading) {
     return (
@@ -114,7 +113,7 @@ export function TipList({ onDelete, refreshKey }: TipListProps) {
   if (tips.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        <p>No tips found. Create your first tip above!</p>
+        No tips found. Create your first tip above!
       </div>
     )
   }

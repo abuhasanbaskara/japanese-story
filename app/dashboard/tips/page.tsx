@@ -48,9 +48,6 @@ export default function TipsPage() {
               <div className="space-y-4">
                 <div>
                   <h2 className="text-2xl font-semibold mb-4">All Tips</h2>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Manage your tips below. You can delete tips that are no longer needed.
-                  </p>
                 </div>
                 <TipList refreshKey={refreshKey} onDelete={handleSuccess} />
               </div>
