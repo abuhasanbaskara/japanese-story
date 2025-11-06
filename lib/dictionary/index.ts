@@ -1,2 +1,2 @@
 export * from './jisho'
-export * from './file'
+export type { DictionaryEntry } from './jisho'

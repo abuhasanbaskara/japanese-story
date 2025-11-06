@@ -1,25 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-
-export interface DictionaryEntry {
-  id: string
-  kanji?: Array<{
-    text: string
-    common?: boolean
-  }>
-  reading: Array<{
-    text: string
-    common?: boolean
-  }>
-  sense: Array<{
-    pos?: string[]
-    gloss: string[]
-    lang?: string
-  }>
-  common?: boolean
-  tags?: string[]
-  jlpt?: string[]
-}
+import type { DictionaryEntry } from './jisho'
 
 let dictionaryCache: DictionaryEntry[] | null = null
 let dictionaryIndex: Map<string, DictionaryEntry[]> | null = null

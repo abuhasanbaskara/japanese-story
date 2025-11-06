@@ -59,6 +59,8 @@ export interface DictionaryEntry {
   jlpt?: string[];
 }
 
+export type { DictionaryEntry };
+
 export async function fetchDictionaryWord(keyword: string): Promise<DictionaryResponse> {
   try {
     let cleanKeyword = keyword.replace(/<[^>]*>/g, '').trim();

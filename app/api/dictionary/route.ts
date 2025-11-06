@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { searchDictionary } from '@/lib/dictionary'
+import { searchDictionary } from '@/lib/dictionary/file'
 import { normalizeJapaneseWord } from '@/lib/japanese'
 
 export async function GET(request: NextRequest) {
