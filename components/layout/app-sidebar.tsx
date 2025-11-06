@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Plus, List } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +17,11 @@ const menuItems = [
     title: "Add Basic Content",
     icon: Plus,
     href: "/dashboard",
+  },
+  {
+    title: "Story List",
+    icon: List,
+    href: "/dashboard/stories",
   },
 ];
 

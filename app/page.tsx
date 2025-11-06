@@ -2,7 +2,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { StoryList } from "@/components/stories/story-list";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getApiUrl, isDevelopment } from "@/lib/api";
+import { getApiUrl, isDevelopment } from "@/lib/utils";
 
 interface Story {
   _id: string;

@@ -39,7 +39,6 @@ async function initializeTokenizer(): Promise<TokenizerInstance> {
         .build((err: any, tokenizer: TokenizerInstance) => {
           tokenizerInitializing = false;
           if (err) {
-            console.error('Failed to initialize kuromoji:', err);
             reject(err);
             return;
           }
@@ -172,9 +171,7 @@ export async function tokenizeJapanese(
     }
 
     return { tokens, rawTokens };
-  } catch (error) {
-    console.warn('Kuromoji tokenization failed, trying tiny-segmenter:', error);
-    
+  } catch {
     try {
       const tinySegmenterModule = await import('tiny-segmenter');
       const TinySegmenter = tinySegmenterModule.default || tinySegmenterModule;
@@ -197,8 +194,7 @@ export async function tokenizeJapanese(
       }
       
       return { tokens, rawTokens: [] };
-    } catch (segmenterError) {
-      console.warn('Tiny-segmenter also failed, using simple tokenizer:', segmenterError);
+    } catch {
       const tokens = simpleTokenizer(cleanText);
       
       if (preserveFurigana && furiganaMap.size > 0) {
@@ -232,8 +228,7 @@ export function tokenizeJapaneseSync(text: string): string[] {
       const segments = segmenter.segment(text);
       return segments.filter((seg: string) => seg.trim().length > 0);
     }
-  } catch (error) {
-    console.warn('Tiny-segmenter not available, using simple tokenizer:', error);
+  } catch {
   }
 
   return simpleTokenizer(text);

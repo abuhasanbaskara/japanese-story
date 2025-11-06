@@ -93,9 +93,7 @@ export async function fetchDictionaryWord(keyword: string): Promise<DictionaryRe
     const data: DictionaryResponse = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching from dictionary:', error);
     throw error;
   }
 }
-
 

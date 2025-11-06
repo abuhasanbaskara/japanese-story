@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { DictionaryDialog } from "./dictionary-dialog";
-import { tokenizeJapanese } from "@/lib/japanese-tokenizer";
+import { tokenizeJapanese } from "@/lib/japanese";
 
 interface ClickableTextProps {
   html: string;

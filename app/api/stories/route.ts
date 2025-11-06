@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import connectDB from '@/lib/config/db'
 import Story from '@/lib/models/story'
-import { tokenizeJapanese } from '@/lib/japanese-tokenizer'
+import { tokenizeJapanese } from '@/lib/japanese'
 
 // POST /api/stories - Create a new story
 export async function POST(request: Request) {

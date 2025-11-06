@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
-import { fetchDictionaryWord, DictionaryEntry } from "@/lib/jisho";
+import { fetchDictionaryWord, DictionaryEntry } from "@/lib/dictionary";
 
 interface DictionaryDialogProps {
   word: string;

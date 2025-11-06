@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
@@ -6,9 +6,9 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import StoryForm from "@/components/dashboard/story-form";
+import { StoryList } from '@/components/dashboard/story-list'
 
-export default function DashboardPage() {
+export default function StoriesPage() {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -18,20 +18,17 @@ export default function DashboardPage() {
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
               <div>
-                <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
+                <h1 className="text-4xl font-bold tracking-tight">Story List</h1>
                 <p className="text-muted-foreground mt-2">
-                  Manage your Japanese story content
+                  Manage and view all your stories
                 </p>
               </div>
-              <div>
-                <h2 className="text-2xl font-semibold mb-4">Add Basic Content</h2>
-                <StoryForm />
-              </div>
+              <StoryList />
             </div>
           </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }
 

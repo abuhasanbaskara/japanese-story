@@ -29,7 +29,6 @@ async function initializeTokenizer(): Promise<any> {
       Kuromoji.builder({ dicPath }).build((err: any, tokenizer: any) => {
         tokenizerInitializing = false
         if (err) {
-          console.error('Failed to initialize kuromoji for lemmatization:', err)
           reject(err)
           return
         }
@@ -78,9 +77,7 @@ export async function normalizeJapaneseWord(input: string): Promise<string> {
     }
     
     return normalized
-  } catch (error) {
-    console.error('Error normalizing Japanese word:', error)
+  } catch {
     return input
   }
 }
-

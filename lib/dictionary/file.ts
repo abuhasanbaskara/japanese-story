@@ -65,7 +65,6 @@ function loadDictionary(): DictionaryEntry[] {
   const dictPath = path.join(process.cwd(), 'lib', 'data', 'jmdict.json')
   
   if (!fs.existsSync(dictPath)) {
-    console.warn('⚠️  Dictionary file not found:', dictPath)
     return []
   }
 
@@ -74,7 +73,6 @@ function loadDictionary(): DictionaryEntry[] {
     const termBank = JSON.parse(fileContent)
     
     if (!Array.isArray(termBank)) {
-      console.error('❌ Invalid dictionary format: expected array')
       return []
     }
 
@@ -146,8 +144,7 @@ function loadDictionary(): DictionaryEntry[] {
     )
 
     return dictionaryCache
-  } catch (error) {
-    console.error('❌ Error loading dictionary:', error)
+  } catch {
     return []
   }
 }

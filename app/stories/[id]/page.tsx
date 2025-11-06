@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, User, Tag, BookOpen, Lock } from "lucide-react";
-import { getApiUrl, isDevelopment } from "@/lib/api";
+import { getApiUrl, isDevelopment } from "@/lib/utils";
 
 interface Story {
   _id: string;
